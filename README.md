@@ -206,11 +206,9 @@ This plot checks to see if the following assumptions are valid:
 Before we see why, let's point out the relationship between the best fitted values and the response matrix:
 
 $
-\begin{align*}
 \boldsymbol{\hat{Y}} &= \boldsymbol{X\hat{\beta}} \\
 &= \boldsymbol{X}(\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y} \\
 \implies \boldsymbol{\hat{Y}} &= \boldsymbol{P}\boldsymbol{Y}
-\end{align*}
 $
 
 Where $\boldsymbol{P}$ is called the *hat matrix*.<br>
