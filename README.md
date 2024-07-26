@@ -80,9 +80,9 @@ Finding an explicit expression of $\boldsymbol{\nabla}_{\boldsymbol{\beta}} J_{\
 
 $$
 \begin{align*}
-J_{\lambda}(\boldsymbol{\beta}) &= (\boldsymbol{Y} - \boldsymbol{X\beta})^T(\boldsymbol{Y} - \boldsymbol{X\beta}) + (\boldsymbol{X\beta})^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p} \\
+J_{\lambda}(\boldsymbol{\beta}) &= (\boldsymbol{Y} - \boldsymbol{X\beta})^T(\boldsymbol{Y} - \boldsymbol{X\beta}) + (\boldsymbol{X\beta})^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}\\
 
-&= \boldsymbol{Y^TY} - (\boldsymbol{X\beta})^T\boldsymbol{Y} - \boldsymbol{Y}^T\boldsymbol{X\beta} + \boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p} \\
+&= \boldsymbol{Y^TY} - (\boldsymbol{X\beta})^T\boldsymbol{Y} - \boldsymbol{Y}^T\boldsymbol{X\beta} + \boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}\\
 
 &= \boldsymbol{Y^TY} - 2\boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{Y} + \boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}
 \end{align*}
@@ -203,14 +203,14 @@ This plot checks to see if the following assumptions are valid:
 - *Homoscedasticity*
 - *Full-Rank Design Matrix*
 
-Before we see why, let's point out the relationship between the best fitted values and the response matrix:
-
-$
+Before we see why, let's point out the relationship between the best fitted values and the response matrix: 
+$$
+\begin{align*}
 \boldsymbol{\hat{Y}} &= \boldsymbol{X\hat{\beta}} \\
 &= \boldsymbol{X}(\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y} \\
 \implies \boldsymbol{\hat{Y}} &= \boldsymbol{P}\boldsymbol{Y}
-$
-
+\end{align*}
+$$
 Where $\boldsymbol{P}$ is called the *hat matrix*.<br>
 The formation of the hat matrix requires the assumption of *Full-Rank Design Matrix*.
 
