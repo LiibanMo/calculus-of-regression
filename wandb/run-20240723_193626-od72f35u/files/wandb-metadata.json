@@ -1,0 +1,32 @@
+{
+  "os":  "macOS-14.5-arm64-arm-64bit",
+  "python":  "3.9.7",
+  "startedAt":  "2024-07-23T18:36:26.198342Z",
+  "program":  "/Users/liibanmohamud/Downloads/Machine Learning/Practice/MLOps/Advanced Multiple Linear Regression/main.py",
+  "codePath":  "MLOps/Advanced Multiple Linear Regression/main.py",
+  "git":  {
+    "remote":  "https://github.com/LiibanMo/Practice.git",
+    "commit":  "a5454d2c55896ef2d77b7e51b096e151c702a39c"
+  },
+  "email":  "liibanmo12@gmail.com",
+  "root":  "/Users/liibanmohamud/Downloads/Machine Learning/Practice/MLOps/Advanced Multiple Linear Regression",
+  "host":  "Liibans-Air",
+  "username":  "liibanmohamud",
+  "executable":  "/Users/liibanmohamud/.pyenv/versions/3.9.7/bin/python",
+  "codePathLocal":  "main.py",
+  "cpu_count":  8,
+  "cpu_count_logical":  8,
+  "disk":  {
+    "/":  {
+      "total":  "245107195904",
+      "used":  "141861015552"
+    }
+  },
+  "memory":  {
+    "total":  "8589934592"
+  },
+  "cpu":  {
+    "count":  8,
+    "countLogical":  8
+  }
+}

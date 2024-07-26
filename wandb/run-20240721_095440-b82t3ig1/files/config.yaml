@@ -1,0 +1,52 @@
+wandb_version: 1
+
+model:
+  desc: null
+  value: Multiple Linear Regression
+dataset:
+  desc: null
+  value: Student_Performance.csv
+epochs:
+  desc: null
+  value: 10000
+learning_rate:
+  desc: null
+  value: 0.005
+lambda:
+  desc: null
+  value: 0.01
+dropout:
+  desc: null
+  value: 0.1
+max_patience:
+  desc: null
+  value: 100
+L_p regularization:
+  desc: null
+  value: L_2
+_wandb:
+  desc: null
+  value:
+    python_version: 3.9.7
+    cli_version: 0.17.4
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1721552080
+    t:
+      1:
+      - 12
+      - 55
+      - 105
+      2:
+      - 12
+      - 55
+      - 105
+      3:
+      - 16
+      - 23
+      4: 3.9.7
+      5: 0.17.4
+      8:
+      - 4
+      - 5
+      13: darwin-arm64

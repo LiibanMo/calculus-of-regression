@@ -1,0 +1,38 @@
+wandb_version: 1
+
+learning_rate:
+  desc: null
+  value: 0.005
+model:
+  desc: null
+  value: Multiple Linear Regression
+dataset:
+  desc: null
+  value: Student_Performance.csv
+epochs:
+  desc: null
+  value: 10000
+_wandb:
+  desc: null
+  value:
+    python_version: 3.9.7
+    cli_version: 0.17.4
+    framework: sklearn
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1721229410
+    t:
+      1:
+      - 5
+      - 12
+      - 53
+      - 55
+      - 105
+      3:
+      - 16
+      - 23
+      4: 3.9.7
+      5: 0.17.4
+      8:
+      - 5
+      13: darwin-arm64
