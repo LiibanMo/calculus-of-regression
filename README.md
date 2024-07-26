@@ -1,8 +1,8 @@
-# Flexible Multiple Linear Regression
+# The Calculus First-Order Gradient-Based Machine Learning
 
 ## Overview
 
-This project explores the calculus foundations of machine learning using linear regression in JAX, but with gradient analytically derived and manually computed. The effects of advanced techniques are explored like *$L_p$-regularization*, *dropout*, *early stopping* and different weight-initialization methods like He, LeCun, random and zero. This project also exposes the need for advanced first-order gradient methods, like momentum, RMS propagation, Adagrad, Adam and so on.
+This project explores the calculus foundations of machine learning using linear regression in JAX, but with gradient analytically derived and manually computed. The effects of advanced techniques are explored like *Lp-regularization*, *dropout*, *early stopping* and different weight-initialization methods like He, LeCun, random and zero. This project also exposes the need for advanced first-order gradient methods, like momentum, RMS propagation, Adagrad, Adam and so on.
 
 ## The Model 
 
