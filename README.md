@@ -1,4 +1,4 @@
-# The Calculus First-Order Gradient-Based Machine Learning
+# The Calculus of First-Order Gradient-Based Machine Learning
 
 ## Overview
 
