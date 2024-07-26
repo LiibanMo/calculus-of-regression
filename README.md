@@ -6,143 +6,13 @@ This project explores the calculus foundations of machine learning using linear 
 
 ## The Model 
 
-The model of the data is assumed to be:
-
-$$ 
-y_i = \tilde{\beta_0} + \sum_{j=1}^{q-1}{x_{ij}\tilde{\beta_j}} + \epsilon_i, \quad i \in \{1,2,...,n\}
-$$
-
-Where: 
-- $y_i$ is the label for the $i^{\text{th}}$ data point,
-- $x_{i,j}$ is the $j^{\text{th}}$ feature for the $i^{\text{th}}$ data point,
-- $\tilde{\beta_j}$ is the coefficient for the $j^{\text{th}}$ feature,
-- and $\epsilon_i$ is assumed to be Normal and independent and identically distributed (i.i.d.) with mean $0$ and variance $\sigma^2$.<br>
-This is because it is presumed that the data provided will come with noise and such noise is modelled using $\epsilon_i$ for each data point.
-
-This model is identical to the following:
-
-$$
-\boldsymbol{Y} = \boldsymbol{X}\boldsymbol{\tilde{\beta}} + \boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim N(\boldsymbol{0}, \Sigma)
-$$
-
-Where:
-- $\boldsymbol{Y} \in \mathbb{R}^{n \times 1}$ is the response variable; 
-- $\boldsymbol{X} \in \mathbb{R}^{n \times q}$ is the full-rank design matrix; 
-- $\boldsymbol{\tilde{\beta}} \in \mathbb{R}^{q \times 1}$ is the vector of true coefficients, including $\beta_0$; 
-- $\boldsymbol{\epsilon} \in \mathbb{R}^{n \times 1}$ is the vector of errors;
-- and $\Sigma \in \mathbb{R}^{n \times n}$ is the variance-covariance matrix of $\boldsymbol{\epsilon}$.
-
-It is worth noting that because $\epsilon_i$ is i.i.d., the covariance matrix $\Sigma$ is diagonal:
-
-$$
-(\Sigma)_{ij} = 
-\begin{cases}
-\sigma^2, \text{ if } i=j\\
-0, \text{ if } i \ne j.
-\end{cases}
-$$
-
-i.e. $\Sigma = \sigma^2\boldsymbol{I}_n$, where $\boldsymbol{I}_n$ is the $n\times n$ identity matrix.
-
-Under these assumptions, predictions can be made using the following formula:
-$$
-\boldsymbol{\hat{Y}} = \boldsymbol{X\beta}
-$$
-- $\boldsymbol{\tilde{Y}} \in \mathbb{R}^{n \times 1}$ is the 'best' vector of fitted values.
-- $\boldsymbol{\hat{\beta}} \in \mathbb{R}^{q \times 1}$ is the 'best' vector of coefficients.
-The quotations marks are used to question if there really is a 'best' way of optimizing the model. However, under the assumptions of the model, it turns out there is actually a 'best' way to find the vector of coefficients and in turn, the best vector of fitted values.
+<img src='assets/1.png' style='max-width:auto; height:auto;'>
 
 ## The Optimization
 
-The optimizer step used is batch gradient descent (BGD).
-
-In order to define the optimizer step, an appropriate loss is needed. The loss function chosen is the $L_2$ loss function (which is in this case defined to be $\text{RSS}(\boldsymbol{\beta})$, the *residual sum of squares*) with $L_p$ regularization, with regularization parameter $\lambda \ge 0$ and $p \ge 1$, defined to be $J_{\lambda}({\boldsymbol{\beta}})$. <br>
-This is chosen over $L_1$ loss due the smoothness of the $L_2$ loss function and the findings of the experiments which will be discussed later.
-
-The step is summarized as:
-$$
-\boldsymbol{\beta}_{k+1} :=\boldsymbol{\beta}_k - \alpha \boldsymbol{\nabla}_{\boldsymbol{\beta}_k} J_{\lambda}(\boldsymbol{\beta}_k), 
-$$
-
-$$
-J_{\lambda}(\boldsymbol{\beta}) = \text{RSS}(\boldsymbol{\beta}) + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}
-$$
-with:
-$$
-\text{RSS}(\boldsymbol{\beta}) = (\boldsymbol{Y} - \boldsymbol{X\beta})^T(\boldsymbol{Y} - \boldsymbol{X\beta})
-$$
-The coefficient vector $\boldsymbol{\beta}_k$ is the coefficient vector at $k^{\text{th}}$ epoch as this step is ran each epoch to update the parameters and which will eventually converge to a neighbourhood near the true parameters.
-
-The intuition behind this optimization step is that $-\boldsymbol{\nabla}_{\boldsymbol{\beta}} J_{\lambda}(\boldsymbol{\beta})$ represents the steepest descent at the point $\boldsymbol{\beta} \in \mathbb{R}^{q \times 1}$, and $|\boldsymbol{\nabla}_{\boldsymbol{\beta}} J_{\lambda}(\boldsymbol{\beta})|$ represents the jump along the descending slope. <br>
-Therefore, $\alpha \ge 0$ regulates the aforementioned jump, hence called the learning rate.
-
-Finding an explicit expression of $\boldsymbol{\nabla}_{\boldsymbol{\beta}} J_{\lambda}(\boldsymbol{\beta})$:
-
-$$
-\begin{align*}
-J_{\lambda}(\boldsymbol{\beta}) &= (\boldsymbol{Y} - \boldsymbol{X\beta})^T(\boldsymbol{Y} - \boldsymbol{X\beta}) + (\boldsymbol{X\beta})^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}\\
-
-&= \boldsymbol{Y^TY} - (\boldsymbol{X\beta})^T\boldsymbol{Y} - \boldsymbol{Y}^T\boldsymbol{X\beta} + \boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}\\
-
-&= \boldsymbol{Y^TY} - 2\boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{Y} + \boldsymbol{\beta}^T\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda\sum_{j=1}^{q-1}|\beta_j|^{p}
-\end{align*}
-$$
-
-By the symmetry of the dot product, $(\boldsymbol{X\beta})^T\boldsymbol{Y} = \boldsymbol{Y}^T\boldsymbol{X\beta}$, hence the final expression. 
-
-Now using matrix calculus, we can find an expression of $\boldsymbol{\nabla_{\beta}}J_{\lambda}(\boldsymbol{\beta})$:
-
-$$
-\begin{align*}
-\boldsymbol{\nabla_{\beta}}J_{\lambda}(\boldsymbol{\beta}) &= -2\boldsymbol{X}^T\boldsymbol{Y} + 2\boldsymbol{X}^T\boldsymbol{X\beta} + \lambda \boldsymbol{\nabla_{\beta}} \sum_{j=1}^{q-1}|\beta_j|^{p}
-\end{align*}
-$$
-
-Now to find $\boldsymbol{\nabla_{\beta}} \sum_{j=1}^{q-1}{|\beta_j|^{p}}$:
-
-$$
-\begin{align*}
-\boldsymbol{\nabla_{\beta}} \sum_{j=1}^{q-1}{|\beta_j|^p}_i &= \boldsymbol{\nabla_{\beta}}\sum_{j=1}^{q-1}{|\beta_j|^p} \\
-&= p\sum_{j=1}^{q-1}{\text{sgn}(\beta_j)|\beta_j|^{p-1}\boldsymbol{\hat{\text{e}}}_{j+1}} \\
-&= p\left(0, \text{sgn}(\beta_1)|\beta_1|^{p-1}, \text{sgn}(\beta_2)|\beta_2|^{p-1}, ..., \text{sgn}(\beta_{q-1})|\beta_{q-1}|^{p-1} \right)^T
-\end{align*} 
-$$
-
-The function $\text{sgn}:\mathbb{R}\rightarrow \{-1, 0, 1\}$, takes an input $x$ and outputs $1$ if $x>0$, $0$ if $x=0$ and $-1$ if $x<0$.
-
-The term $\boldsymbol{\hat{\text{e}}_{k}}$ is the $k^{\text{th}}$ unit vector in the standard orthonormal basis $B_q = \{\boldsymbol{\hat{\text{e}}}_{1}, \boldsymbol{\hat{\text{e}}}_{2}, ..., \boldsymbol{\hat{\text{e}}}_{q}\}$ of the Euclidean space $\mathbb{\R}^q$.
-
-Therefore:
-
-$$
-\begin{align*}
-\boldsymbol{\nabla_{\beta}}J_{\lambda}(\boldsymbol{\beta}) &= 2\boldsymbol{X}^T(\boldsymbol{X\beta}-\boldsymbol{Y}) + \lambda p\sum_{j=1}^{q-1}{\text{sgn}(\beta_j)|\beta_j|^{p-1}\boldsymbol{\hat{\text{e}}}_{j+1}} \\
-&= 2\boldsymbol{X}^T(\boldsymbol{\hat{Y}}-\boldsymbol{Y}) + \lambda p\sum_{j=1}^{q-1}{\text{sgn}(\beta_j)|\beta_j|^{p-1}\boldsymbol{\hat{\text{e}}}_{j+1}} \\
-\newline
-\end{align*}
-$$
-
-Thus completing the expression need to completed need to implement the gradient descent on the coefficients. 
-
-This should ideally converge to a neighbourhood near the best fitted vector of coefficients which, under the assumptions of our model, has a closed form as previously mentioned. <br>
-The solution to finding that set of coefficients is through this formula:
-$$
-\boldsymbol{\hat{\beta}} = \underset{\boldsymbol{\beta}}{\text{argmin}} \ \text{RSS}(\boldsymbol{\beta})
-$$
-Now let us find this closed form. Using what was found by finding gradient vector of the loss function $J_{\lambda}(\boldsymbol{\beta})$ we can immediately start by looking at the gradient of the residual sum of squares and setting it equal to zero:
-$$
-\begin{align*}
-\boldsymbol{\nabla}_{\boldsymbol{\beta}}\text{RSS}(\boldsymbol{\beta}) |_{\boldsymbol{\beta} = \boldsymbol{\hat{\beta}}}&= 2\boldsymbol{X}^T\boldsymbol{X}\boldsymbol{{\hat\beta}} - 2\boldsymbol{X}^T\boldsymbol{Y} = 0 \\
-\\
-\implies \boldsymbol{\hat{\beta}} &= (\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y}
-\end{align*}
-$$
-
-The inversion of the matrix $\boldsymbol{X}^T\boldsymbol{X}$ is only possible if $\boldsymbol{X}$ is of full rank. This means that the rank of the design matrix must be $\text{min}(n,q)$.<br>
-Reasonably, you would not have more parameters than observations because of overfitting becomes very likely and so the rank of the design matrix is often assumed to be $q$.
-
-This is indeed a minimum point because $\text{RSS}(\boldsymbol{\beta})$ is a quadratic equation with positive quadratic terms, therefore it will only have one turning point under the axes $\{\beta_0, \beta_1,...,\beta_{q-1}\}$ which will be a global minimum. <br>
-More rigorously, the Hessian matrix of $\text{RSS}(\boldsymbol{\beta})$ is equal to $2\boldsymbol{X}^T\boldsymbol{X}$, which is positive-definite if the design matrix is full rank, therefore $\boldsymbol{\hat{\beta}}$ is the global minimum of $\text{RSS}(\boldsymbol{\beta})$.
+<img src='assets/2.png' style='max-width:auto; height:auto;'>
+<img src='assets/3.png' style='max-width:auto; height:auto;'>
+<img src='assets/4.png' style='max-width:auto; height:auto;'>
 
 ## Structuring the Model
 
@@ -196,44 +66,7 @@ A useful way to check the above assumptions of the model, is by looking at the f
 
 ***Residual vs Fitted Values***:
 
-The plot shows whether the residuals, $\boldsymbol{e} \, (= \boldsymbol{Y} - \boldsymbol{\hat{Y}})$, are independent to the $\boldsymbol{\hat{Y}}$, fitted values.<br>
-This plot checks to see if the following assumptions are valid:
-- *Normality of errors*
-- *Independence of errors*
-- *Homoscedasticity*
-- *Full-Rank Design Matrix*
-
-Before we see why, let's point out the relationship between the best fitted values and the response matrix: 
-$$
-\begin{align*}
-\boldsymbol{\hat{Y}} &= \boldsymbol{X\hat{\beta}} \\
-&= \boldsymbol{X}(\boldsymbol{X}^T\boldsymbol{X})^{-1}\boldsymbol{X}^T\boldsymbol{Y} \\
-\implies \boldsymbol{\hat{Y}} &= \boldsymbol{P}\boldsymbol{Y}
-\end{align*}
-$$
-Where $\boldsymbol{P}$ is called the *hat matrix*.<br>
-The formation of the hat matrix requires the assumption of *Full-Rank Design Matrix*.
-
-It has two properties:
-- Idempotence: $\boldsymbol{P}^2 = \boldsymbol{P}$
-- Symmetry: $\boldsymbol{P}^T = \boldsymbol{P}$
-
-With this information, let's begin to see the relationship between the best fitted values and the residuals:
-$$
-\begin{align*}
-\text{Cov}(\boldsymbol{e}, \boldsymbol{\hat{Y}}) &= \text{Cov}((\boldsymbol{I}-\boldsymbol{P})\boldsymbol{Y}, \boldsymbol{P}\boldsymbol{Y}) \\
-&= \text{Cov}(\boldsymbol{Y}, \boldsymbol{P}\boldsymbol{Y}) - \text{Cov}(\boldsymbol{P}\boldsymbol{Y}, \boldsymbol{P}\boldsymbol{Y}) \\
-&= \text{Var}(\boldsymbol{Y})\boldsymbol{P}^T - \boldsymbol{P} \, \text{Var}(\boldsymbol{Y})\boldsymbol{P}^T \\
-&= \sigma^2\boldsymbol{P}^T - \sigma^2\boldsymbol{P}\boldsymbol{P}^T \\
-&= 0
-\end{align*}
-$$
-
-The above calculations required the assumption *Independence of errors* and *Homoscedasticity* because $\text{Var}(\boldsymbol{Y})=\sigma^2\boldsymbol{I}_n$.
-
-Furthermore, given the assumption of *normality of errors*, the fitted values $\boldsymbol{\hat{Y}}$ is Normally distributed because it is a linear transformation of $\boldsymbol{Y}$, and $\boldsymbol{e}$ is also a Normally distributed for the same reason.
-
-Since both $\boldsymbol{e}$ and $\boldsymbol{\hat{Y}}$ are Normal and uncorrelated, this implies that the fitted values and residuals are independent, under the aforementioned assumptions.
+<img src='assets/5.png' style='max-width:auto; height:auto;'>
 
 If the model assumptions are correct, it is expected that the plot displays an even spread of points with $\text{E}(\boldsymbol{e})=\text{E}(\boldsymbol{Y}) - \text{E}(\boldsymbol{\hat{Y}}) = \boldsymbol{X\beta} - \boldsymbol{PX\beta} = 0$.
 
@@ -264,21 +97,7 @@ The scale-location plot looks standard given our assumptions. Even spread with a
 
 ***Residuals vs Leverage***:
 
-The leverage of a point $i$ is defined to be $p_{ii}$, the $i^{\text{th}}$ diagonal entry of $\boldsymbol{P}$, the hat matrix. <br>
-A high leverage indicates that the data point has a lot influence on the outcome of the coefficients, so removing it from the data will change the value of the weights and bias.
-
-Cook's distance can be used to define what 'high leverage' means. The Cook's distance, $D_i$, for an observation $i$:
-$$
-D_i = \frac{e_{i}p_{ii}}{r\sigma^2(1-p_{ii})},
-$$
-where $r$ is the rank of the design matrix. Important to note, $\sigma^2$ can be estimated by taking the average of the variances of the residuals.
-
-Since Cook's distance is a function of the residual and the leverage. As a 
-rule of thumb, a Cook's distance of 1 or greater is considered large.
-
-it is possible to plot the contours of each particular value of the Cook's distance. In the plot above, the coloured lines represent the contour plots of $D_i \in \{0.5, 1, 2\}$.
-
-By inspection, no points seem influential as none of the points fall beyond even the first contour line. Therefore, there seems to be no points in the particular dataset that I used that distorts the fit of model.
+<img src='assets/6.png' style='max-width:auto; height:auto;'>
 
 ### Analysis of the coefficient vector, $\boldsymbol{\beta}$
 
